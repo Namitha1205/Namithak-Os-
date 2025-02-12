@@ -1,0 +1,49 @@
+#include <stdio.h>
+#define P 5  
+#define R 3  
+int isSafe(int available[], int max[P][R], int allocation[P][R], int need[P][R]) {
+    int work[R], finish[P] = {0}, safeSeq[P], count = 0;
+    for (int i = 0; i < R; i++)
+        work[i] = available[i];
+    while (count < P) {
+        int found = 0;
+        for (int i = 0; i < P; i++) {
+            if (!finish[i]) { 
+                int canAllocate = 1;
+                for (int j = 0; j < R; j++)
+                    if (need[i][j] > work[j]) {
+                        canAllocate = 0;
+                        break;
+                    }
+                if (canAllocate) {
+                    for (int j = 0; j < R; j++)
+                        work[j] += allocation[i][j]; 
+                    safeSeq[count++] = i; 
+                    finish[i] = 1;
+                    found = 1;
+                }
+            }
+        }
+        if (!found) {
+            printf("System is in an UNSAFE state! Deadlock may occur.\n");
+            return 0;
+        }
+    }
+    printf("System is in a SAFE state.\nSafe sequence: ");
+    for (int i = 0; i < P; i++)
+        printf("P%d ", safeSeq[i]);
+    printf("\n");
+    return 1;
+}
+int main() {
+    int allocation[P][R] = { {0, 1, 0}, {2, 0, 0}, {3, 0, 2}, {2, 1, 1}, {0, 0, 2} };
+    int max[P][R] = { {7, 5, 3}, {3, 2, 2}, {9, 0, 2}, {2, 2, 2}, {4, 3, 3} };
+    int available[R] = {3, 3, 2};
+    int need[P][R];
+    for (int i = 0; i < P; i++)
+        for (int j = 0; j < R; j++)
+            need[i][j] = max[i][j] - allocation[i][j];
+    isSafe(available, max, allocation, need);
+
+    return 0;
+}
