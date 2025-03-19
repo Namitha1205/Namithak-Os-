@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+    int n;  
+    int head;  
+    printf("Enter the number of disk requests: ");
+    scanf("%d", &n);
+    int requests[n];
+    printf("Enter the disk requests (cylinder numbers):\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+    }
+    printf("Enter the initial head position: ");
+    scanf("%d", &head);
+    int total_head_movement = 0;
+    printf("\nDisk Scheduling Order:\n");
+    printf("%d -> ", head);  
+    for (int i = 0; i < n; i++) {
+        total_head_movement += abs(requests[i] - head);
+        head = requests[i];  
+        printf("%d", head);
+        if (i != n - 1) {
+            printf(" -> ");
+        }
+    }
+    printf("\n\nTotal head movement: %d cylinders\n", total_head_movement);
+    return 0;
+}
