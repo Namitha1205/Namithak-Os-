@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_DIRS 5
+#define MAX_FILES 5
+
+char subDirs[MAX_DIRS][50];
+char files[MAX_DIRS][MAX_FILES][50];
+int subDirCount = 0, fileCounts[MAX_DIRS] = {0};
+
+void createSubDirectory() {
+    if (subDirCount >= MAX_DIRS) {
+        printf("No more subdirectories can be created!\n");
+        return;
+    }
+    printf("Enter subdirectory name: ");
+    scanf("%s", subDirs[subDirCount++]);
+    printf("Subdirectory created!\n");
+}
+
+void addFile() {
+    char subDirName[50];
+    printf("Enter subdirectory name: ");
+    scanf("%s", subDirName);
+    for (int i = 0; i < subDirCount; i++) {
+        if (strcmp(subDirs[i], subDirName) == 0) {
+            if (fileCounts[i] >= MAX_FILES) {
+                printf("Subdirectory is full!\n");
+                return;
+            }
+            printf("Enter file name: ");
+            scanf("%s", files[i][fileCounts[i]++]);
+            printf("File added!\n");
+            return;
+        }
+    }
+    printf("Subdirectory not found!\n");
+}
+
+void displayStructure() {
+    printf("Directory Structure:\n");
+    for (int i = 0; i < subDirCount; i++) {
+        printf("SubDir: %s\n", subDirs[i]);
+        for (int j = 0; j < fileCounts[i]; j++) {
+            printf("File: %s\n", files[i][j]);
+        }
+    }
+}
+
+int main() {
+    int choice;
+    do {
+        printf("\n1. Create SubDirectory\n2. Add File\n3. Display\n4. Exit\nChoice: ");
+        scanf("%d", &choice);
+        if (choice == 1) {
+            createSubDirectory();
+        } else if (choice == 2) {
+            addFile();
+        } else if (choice == 3) {
+            displayStructure();
+        }
+    } while (choice != 4);
+    return 0;
+}
