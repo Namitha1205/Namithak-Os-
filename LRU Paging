@@ -1,0 +1,45 @@
+#include <stdio.h>
+int main() {
+    int pages[] = {2, 3, 4, 1, 2, 5, 1};
+    int frames[3] = {-1, -1, -1};
+    int num_pages = 7;
+    int page_faults = 0;
+    for (int i = 0; i < num_pages; i++) {
+        int found = 0;
+        for (int j = 0; j < 3; j++) {
+            if (frames[j] == pages[i]) {
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            int lru_index = 0, lru_time = i;
+            for (int j = 0; j < 3; j++) {
+                int last_used = -1;
+                for (int k = i - 1; k >= 0; k--) {
+                    if (pages[k] == frames[j]) {
+                        last_used = k;
+                        break;
+                    }
+                }
+                if (last_used == -1 || last_used < lru_time) {
+                    lru_time = last_used;
+                    lru_index = j;
+                }
+            }
+            frames[lru_index] = pages[i];
+            page_faults++;
+        }
+        printf("Frames after page %d: ", pages[i]);
+        for (int j = 0; j < 3; j++) {
+            if (frames[j] != -1) {
+                printf("%d ", frames[j]);
+            } else {
+                printf("- ");
+            }
+        }
+        printf("\n");
+    }
+    printf("Total Page Faults: %d\n", page_faults);
+    return 0;
+}
