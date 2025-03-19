@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+void scan_disk_scheduling(int requests[], int n, int head, int direction, int disk_size) {
+    int total_head_movement = 0;
+    int i, j;
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (requests[i] > requests[j]) {
+                int temp = requests[i];
+                requests[i] = requests[j];
+                requests[j] = temp;
+            }
+        }
+    }
+    int head_index = 0;
+    while (head_index < n && requests[head_index] < head) {
+        head_index++;
+    }
+    printf("\nDisk Scheduling Order:\n");
+    if (direction == 1) {  
+        for (i = head_index; i < n; i++) {
+            printf("%d -> ", requests[i]);
+            total_head_movement += abs(requests[i] - head);
+            head = requests[i];
+        }
+        if (head != disk_size - 1) {
+            total_head_movement += abs(disk_size - 1 - head);
+            printf("%d -> ", disk_size - 1);
+            head = disk_size - 1;
+        }
+        for (i = head_index - 1; i >= 0; i--) {
+            printf("%d", requests[i]);
+            total_head_movement += abs(requests[i] - head);
+            head = requests[i];
+            if (i > 0) {
+                printf(" -> ");
+            }
+        }
+    } else {
+	}
+        for (i = head_index - 1; i >= 0; i--) {
+            printf("%d -> ", requests[i]);
+            total_head_movement += abs(requests[i] - head);
+            head = requests[i];
+        }
+        if (head != 0) {
+            total_head_movement += abs(head - 0);
+            printf("0 -> ");
+            head = 0;
+        }
+        for (i = head_index; i < n; i++) {
+            printf("%d", requests[i]);
+            total_head_movement += abs(requests[i] - head);
+            head = requests[i];
+            if (i < n - 1) {
+                printf(" -> ");
+            }
+        }
+    }
+    printf("\n\nTotal head movement: %d cylinders\n", total_head_movement);
+}
+int main() {
+    int n, head, direction, disk_size;
+    printf("Enter the number of disk requests: ");
+    scanf("%d", &n);
+    int requests[n];
+    printf("Enter the disk requests (cylinder numbers): ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+    }
+    printf("Enter the initial head position: ");
+    scanf("%d", &head);
+    printf("Enter the disk size: ");
+    scanf("%d", &disk_size);
+    printf("Enter the initial direction (0 for left, 1 for right): ");
+    scanf("%d", &direction);
+    scan_disk_scheduling(requests, n, head, direction, disk_size);
+    return 0;
+}
