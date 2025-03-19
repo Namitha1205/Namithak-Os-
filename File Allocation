@@ -1,0 +1,40 @@
+#include <stdio.h>
+int main()
+{
+    int files[100], start, length, n, i, j;
+    char choice;
+    for (i = 0; i < 100; i++)
+    {
+        files[i] = 0; 
+    }
+    do 
+    {
+        printf("Enter the starting block and the length of the file: ");
+        scanf("%d %d", &start, &length);
+        int allocated = 1;
+        for (i = start; i < start + length; i++) 
+        {
+            if (files[i] == 1) 
+            { 
+                allocated = 0;
+                break;
+            }
+        }
+        if (allocated) {
+            for (i = start; i < start + length; i++) 
+            {
+                files[i] = 1; 
+            }
+            printf("File allocated successfully from block %d to %d.\n", start, start + length - 1);
+        } else {
+            printf("File allocation failed. Some blocks are already allocated.\n");
+        }
+        printf("Do you want to allocate another file? (y/n): ");
+        scanf(" %c", &choice);
+    } while (choice == 'y' || choice == 'Y');
+    printf("Final Block Allocation:\n");
+    for (i = 0; i < 100; i++) {
+        printf("Block %d: %s\n", i, files[i] == 1 ? "Allocated" : "Free");
+    }
+    return 0;
+}
